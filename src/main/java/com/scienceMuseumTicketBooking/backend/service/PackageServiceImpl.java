@@ -1,13 +1,16 @@
 package com.scienceMuseumTicketBooking.backend.service;
 
-import com.scienceMuseumTicketBooking.backend.repository.PackageRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.List;
 
+import com.scienceMuseumTicketBooking.backend.model.Package;
+import com.scienceMuseumTicketBooking.backend.repository.PackageRepository;
+import com.scienceMuseumTicketBooking.backend.service.PackageService;
+
 @Service
 public class PackageServiceImpl implements PackageService {
+
     private final PackageRepository packageRepository;
 
     public PackageServiceImpl(PackageRepository packageRepository) {
