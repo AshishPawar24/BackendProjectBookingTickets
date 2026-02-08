@@ -8,30 +8,36 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService{
-    private final UserRepository userRepository;
+public class UserServiceImpl implements UserService {
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final UserRepository urepo;
+
+    public UserServiceImpl(UserRepository urepo) {
+        this.urepo = urepo;
     }
 
     @Override
-    public int insert(User b) {
-        return 0;
+    public int insert(User u) {
+        User saved = urepo.save(u);
+        return saved.getUid();
     }
 
     @Override
     public List<User> getall() {
-        return Collections.emptyList();
+        return urepo.findAll();
     }
 
     @Override
     public User getbyid(int id) {
-        return null;
+        return urepo.findById(id).orElse(null);
     }
 
     @Override
     public void updateLastLogin(int uid, String date) {
-        // later update
+        User user = urepo.findById(uid).orElse(null);
+        if (user != null) {
+            user.setLastLogin(date);
+            urepo.save(user);
+        }
     }
 }

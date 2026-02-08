@@ -11,24 +11,25 @@ import com.scienceMuseumTicketBooking.backend.service.PackageService;
 @Service
 public class PackageServiceImpl implements PackageService {
 
-    private final PackageRepository packageRepository;
+    private final PackageRepository prepo;
 
-    public PackageServiceImpl(PackageRepository packageRepository) {
-        this.packageRepository = packageRepository;
+    public PackageServiceImpl(PackageRepository prepo) {
+        this.prepo = prepo;
     }
 
     @Override
     public Package viewDetailedPackage(int pid) {
-        return null;
+        return prepo.findById(pid).orElse(null);
     }
 
     @Override
     public List<Package> getPackagesByMuseumId(int mid) {
-        return Collections.emptyList();
+        return prepo.findByMuseumMid(mid);
     }
 
     @Override
     public int createPackage(Package p) {
-        return 0;
+        Package saved = prepo.save(p);
+        return saved.getPid();
     }
 }
