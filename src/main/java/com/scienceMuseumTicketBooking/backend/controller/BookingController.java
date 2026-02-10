@@ -15,6 +15,7 @@ import com.scienceMuseumTicketBooking.backend.service.BookingService;
 public class BookingController {
 
     private final BookingService bookingService;
+    public String sesssion_id;
 
 
     private String sessionId;
@@ -60,5 +61,9 @@ public class BookingController {
     @PostMapping("/status")
     public String changeBookingStatus(@RequestParam int bid, @RequestParam String newStatus) {
         return bookingService.changeStatusBooking(bid, newStatus);
+    }
+
+    public Booking getcurrentbooking() {
+        return null;
     }
 }
