@@ -10,9 +10,10 @@ import java.util.List;
 @Service
 public class MuseumServiceImpl implements MuseumService {
 
-    private final MuseumRepository mrepo;
+    MuseumRepository mrepo;
 
     public MuseumServiceImpl(MuseumRepository mrepo) {
+        super();
         this.mrepo = mrepo;
     }
 
@@ -23,7 +24,10 @@ public class MuseumServiceImpl implements MuseumService {
 
     @Override
     public Museum fullDetails(int mid) {
-        return mrepo.findById(mid).orElse(null);
+        // TODO Auto-generated method stub
+        mrepo.findById(mid).get();
+        Museum m = mrepo.findById(mid).get();
+        return m;
     }
 
     @Override
@@ -34,20 +38,14 @@ public class MuseumServiceImpl implements MuseumService {
 
     @Override
     public String updatemueByAdmin(Museum mue) {
-        Museum existing = mrepo.findById(mue.getMid()).orElse(null);
-        if (existing == null) return "Museum not found";
-
-        mrepo.save(mue);
-        return "updated";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public String deletemueByAdmin(Museum mue) {
-        Museum existing = mrepo.findById(mue.getMid()).orElse(null);
-        if (existing == null) return "Museum not found";
-
-        mrepo.delete(existing);
-        return "deleted";
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -63,10 +61,12 @@ public class MuseumServiceImpl implements MuseumService {
     @Override
     public List<Museum> findMueByStateandCity(String state, String city) {
         return mrepo.findMueByStateAndCity(state, city);
+
     }
 
     @Override
     public List<Museum> searchMuseumsByName(String name) {
         return mrepo.findMuseumsByMunameStartingWith(name);
     }
+
 }

@@ -7,52 +7,54 @@ import org.springframework.web.bind.annotation.*;
 import com.scienceMuseumTicketBooking.backend.model.Museum;
 import com.scienceMuseumTicketBooking.backend.service.MuseumService;
 
-@RestController
 @CrossOrigin
+@RestController
 @RequestMapping("/museum")
 public class MuseumController {
+    int mueid=2;
+    MuseumService mser;
 
-    private final MuseumService museumService;
-
-    private int mueid = 0;
-
-    public MuseumController(MuseumService museumService) {
-        this.museumService = museumService;
+    public MuseumController(MuseumService mser) {
+        super();
+        this.mser = mser;
     }
 
     @GetMapping("/all")
-    public List<Museum> getMuseumCards() {
-        return museumService.card_details();
+    public List<Museum>card_details(){
+        return mser.card_details();
     }
 
     @GetMapping("/mue/{mid}")
-    public Museum getMuseumDetails(@PathVariable int mid) {
-        mueid = mid;
-        return museumService.fullDetails(mid);
+    public Museum fullDetails(@PathVariable int mid) {
+        mueid=mid;
+        return mser.fullDetails(mid);
     }
 
     @PostMapping("/create")
-    public String createMuseum(@RequestBody Museum museum) {
-        return museumService.createmueByAdmin(museum);
+    public String createmueByAdmin(@RequestBody Museum mue) {
+        return mser.createmueByAdmin(mue);
     }
 
     @GetMapping("/mue/by-state")
-    public List<Museum> findByState(@RequestParam String state) {
-        return museumService.findMueByState(state);
+    public List<Museum> findMueByState(@RequestParam String state){
+        return mser.findMueByState(state);
     }
 
     @GetMapping("/mue/by-city")
-    public List<Museum> findByCity(@RequestParam String city) {
-        return museumService.findMueBycity(city);
+    public List<Museum> findMueBycity(@RequestParam String city){
+        return mser.findMueBycity(city);
     }
-
     @GetMapping("/mue/by-both")
-    public List<Museum> findByStateAndCity(@RequestParam String state, @RequestParam String city) {
-        return museumService.findMueByStateandCity(state, city);
+    public List<Museum> findMueByStateandCity(String state, String city){
+        return mser.findMueByStateandCity(state, city);
     }
 
     @GetMapping("/mue/search")
-    public List<Museum> searchByName(@RequestParam String name) {
-        return museumService.searchMuseumsByName(name);
+    public List<Museum> searchMuseumsByName(String name){
+        return mser.searchMuseumsByName(name);
     }
+
+
+
+
 }

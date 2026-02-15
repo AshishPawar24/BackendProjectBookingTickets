@@ -3,44 +3,45 @@ package com.scienceMuseumTicketBooking.backend.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.scienceMuseumTicketBooking.backend.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
-
 import com.scienceMuseumTicketBooking.backend.model.User;
 import com.scienceMuseumTicketBooking.backend.service.UserService;
 
-@RestController
 @CrossOrigin
+@RestController
 @RequestMapping("/user")
 public class UserController {
-
-    private final UserService userService;
-    private int uid = 1;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
+    int uid=1;
+    UserServiceImpl userv;
+    public UserController(UserServiceImpl userv) {
+        super();
+        this.userv = userv;
     }
-
     @GetMapping("/currentuser")
     public User getCurrentUser() {
-        return userService.getbyid(uid);
+
+        return userv.getbyid(uid);
     }
 
     @PostMapping("/save")
-    public int saveUser(@RequestBody User u) {
-        uid = userService.insert(u);
+    public int insert(@RequestBody User b1) {
+        uid=userv.insert(b1);
         return uid;
     }
 
     @PostMapping("/saves")
-    public Map<String, Object> saveUserReturnSession(@RequestBody User u) {
-        uid = userService.insert(u);
-        Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", uid);
+    public Map insertrandom(@RequestBody User b1) {
+        uid=userv.insert(b1);
+        Map map=new HashMap();
+        map.put("sessionId",uid);
         return map;
     }
 
     @PostMapping("/updatelast")
-    public void updateLastLogin(@RequestParam int uid, @RequestParam String date) {
-        userService.updateLastLogin(uid, date);
+    public void updatelastLogin(int uid, String date) {
+        userv.updateLastLogin(uid, date);
     }
+
+
 }

@@ -9,58 +9,49 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-    private final BookingRepository brepo;
-
+    BookingRepository brepo;
     public BookingServiceImpl(BookingRepository brepo) {
+        super();
         this.brepo = brepo;
     }
 
     @Override
     public int createBooking(Booking b) {
-        Booking saved = brepo.save(b);
-        return saved.getBid();
+
+        Booking booo = brepo.save(b);
+        return booo.getBid();
     }
 
     @Override
-    public List<Booking> getById(int uid) {
-        return List.of();
-    }
-
-    @Override
-    public List<Booking> getAll() {
-        return List.of();
-    }
-
-    @Override
-    public List<Booking> getbyid(int uid) {
-        return brepo.findByUserUid(uid);
+    public List<Booking>getbyid(int uid) {
+        List<Booking> l = brepo.findByUserUid(uid);
+        return l;
     }
 
     @Override
     public List<Booking> getall() {
+        // TODO Auto-generated method stub
         return brepo.findAll();
+
     }
 
     @Override
-    public String changeStatusBooking(int bid, String ans) {
-        Booking booking = brepo.findById(bid).orElse(null);
-
-        if (booking == null) {
+    public String changeStatusBooking(int bid,String ans) {
+        // TODO Auto-generated method stub
+        Booking booking = brepo.findById(bid).get();
+        if(booking==null) {
             return "booking not found";
         }
-
-        booking.setBooking_status(ans);
-        brepo.save(booking);
-        return "Status updated successfully";
+        else {
+            booking.setBooking_status(ans);
+            brepo.save(booking);
+            return"Status updated successfully";
+        }
     }
 
     @Override
-    public Booking getByIdOne(int uid) {
-        return null;
+    public Booking getbyidone(int uid) {
+        return brepo.findById(uid).get();
     }
 
-    @Override
-    public Booking getbyidone(int bid) {
-        return brepo.findById(bid).orElse(null);
-    }
 }

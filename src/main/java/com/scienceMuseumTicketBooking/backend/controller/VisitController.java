@@ -1,9 +1,8 @@
 package com.scienceMuseumTicketBooking.backend.controller;
 
-//package com.scienceMuseumTicketBooking.backend.controller;
+import com.scienceMuseumTicketBooking.backend.service.emailService;
 
 import com.google.zxing.BarcodeFormat;
-//import com.google.zxing.BarcodeFormat.QR_CODE;
 
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -17,52 +16,36 @@ import java.io.IOException;
 
 import com.scienceMuseumTicketBooking.backend.model.Booking;
 import com.scienceMuseumTicketBooking.backend.model.User;
-import com.scienceMuseumTicketBooking.backend.service.emailService;
 
-@RestController
 @CrossOrigin
+@RestController
 @RequestMapping("/api/visit")
 public class VisitController {
-
     @Autowired
-    private UserController usercont;
-
+    UserController usercont;
     @Autowired
-    private MuseumController museumcont;
-
+    MuseumController museumcont;
     @Autowired
-    private BookingController bookingcont;
+    BookingController bookingcont;
 
     @Autowired
     private emailService emailservice;
 
     @GetMapping("/send-email")
     public String sendVisitDetailsEmail() throws IOException, WriterException {
+        User u=usercont.getCurrentUser();
+        Booking b=bookingcont.getcurrentbooking();
+        String sessionid=bookingcont.sesssion_id;
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(sessionid, BarcodeFormat.QR_CODE, 200, 200);
 
-        User u = usercont.getCurrentUser();
-        Booking b = bookingcont.getcurrentbooking();
-        String sessionid = bookingcont.sesssion_id;
-
-        // QR Code generation (placeholder for Day 6)
-        QRCodeWriter qr = new QRCodeWriter();
-        BitMatrix bitMatrix = qr.encode(sessionid, BarcodeFormat.QR_CODE, 200, 200);
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
+        byte[] qrCode = pngOutputStream.toByteArray();
 
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", out);
-        byte[] qrBytes = out.toByteArray();
-
-        // Send email (placeholder)
-        emailservice.sendEmail(
-                u.getEmail(),
-                u.getName(),
-                b.getTotal_people(),
-                b.getVisit_date(),
-                b.getVisit_time(),
-                "TEMP_TICKET_NO",
-                qrBytes
-        );
-
+        emailservice.sendEmail(u.getEmail(), u.getName(),b.getTotal_people(), b.getVisit_date(), b.getVisit_time(), "126743", qrCode);
         return "Visit details email sent successfully!";
+
     }
 }

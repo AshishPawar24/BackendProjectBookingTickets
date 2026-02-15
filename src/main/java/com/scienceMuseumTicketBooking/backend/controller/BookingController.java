@@ -1,10 +1,11 @@
 package com.scienceMuseumTicketBooking.backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.web.bind.annotation.*;
 
 import com.scienceMuseumTicketBooking.backend.model.Booking;
 import com.scienceMuseumTicketBooking.backend.service.BookingService;
@@ -13,57 +14,61 @@ import com.scienceMuseumTicketBooking.backend.service.BookingService;
 @CrossOrigin
 @RequestMapping("/booking")
 public class BookingController {
+    @Autowired
+    UserController usercont;
+    @Autowired
+    MuseumController museumcont;
+    @Autowired
+    PaymentController paymentcont;
+    @Autowired
+    VisitController visitcont;
 
-    private final BookingService bookingService;
-    public String sesssion_id;
+    String sesssion_id;
+    int bid;
+    BookingService bser;
 
-
-    private String sessionId;
-    private int bid = 0;
-
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
+    public BookingController(BookingService bser) {
+        super();
+        this.bser = bser;
     }
-
     @GetMapping("/get")
-    public Map<String, Object> getSessionId() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", sessionId);
+    public Map sessionID()
+    {
+        Map map=new HashMap();
+        map.put("sessionId",sesssion_id);
         return map;
     }
-
     @PostMapping("/create")
-    public Map<String, Object> createBooking(@RequestBody Booking booking) {
+    public Map createBooking(@RequestBody Booking b) {
 
-        bid = bookingService.createBooking(booking);
-        sessionId = "TEMP_SESSION_ID";
+        b.setUser(usercont.getCurrentUser());
+        b.setMid(museumcont.mueid);
+        b.setBooking_status("Booking");
+        b.setPayment_status("Initiated");
+        bid=bser.createBooking(b);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", sessionId);
+        sesssion_id=paymentcont.createorderdirectly(b,usercont.getCurrentUser());
+        Map map=new HashMap();
+        map.put("sessionId",sesssion_id);
         return map;
     }
 
     @GetMapping("/user/{uid}")
-    public List<Booking> getBookingsByUser(@PathVariable int uid) {
-        return bookingService.getById(uid);
+    public List<Booking>getbyid(@PathVariable int uid){
+        return bser.getbyid(uid);
     }
-
     @GetMapping("/booking")
-    public Booking getCurrentBooking() {
-        return bookingService.getByIdOne(bid);
+    public Booking getcurrentbooking(){
+        return bser.getbyidone(bid);
     }
-
     @GetMapping("/all")
-    public List<Booking> getAllBookings() {
-        return bookingService.getAll();
+    public List<Booking> getAll() {
+        return bser.getall();
     }
 
     @PostMapping("/status")
     public String changeBookingStatus(@RequestParam int bid, @RequestParam String newStatus) {
-        return bookingService.changeStatusBooking(bid, newStatus);
+        return bser.changeStatusBooking(bid, newStatus);
     }
 
-    public Booking getcurrentbooking() {
-        return null;
-    }
 }

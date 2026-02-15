@@ -9,35 +9,42 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    private final UserRepository urepo;
-
+    UserRepository urepo;
     public UserServiceImpl(UserRepository urepo) {
+        super();
         this.urepo = urepo;
     }
-
     @Override
-    public int insert(User u) {
-        User saved = urepo.save(u);
-        return saved.getUid();
+    public int insert(User b) {
+        System.out.println("Saving user: " + b);
+        User savedUser = urepo.save(b);
+        // Return the auto-generated ID
+        return savedUser.getUid();
     }
+
 
     @Override
     public List<User> getall() {
-        return urepo.findAll();
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public User getbyid(int id) {
-        return urepo.findById(id).orElse(null);
-    }
 
+        return urepo.findById(id).get();
+    }
     @Override
     public void updateLastLogin(int uid, String date) {
-        User user = urepo.findById(uid).orElse(null);
-        if (user != null) {
+        // TODO Auto-generated method stub
+        User user = urepo.findById(uid).get();
+        if(user!=null) {
             user.setLastLogin(date);
             urepo.save(user);
         }
+
+
     }
+
+
 }

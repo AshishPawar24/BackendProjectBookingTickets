@@ -1,5 +1,6 @@
 package com.scienceMuseumTicketBooking.backend.controller;
 
+import com.scienceMuseumTicketBooking.backend.service.PackageServiceImpl;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -10,25 +11,24 @@ import com.scienceMuseumTicketBooking.backend.service.PackageService;
 @CrossOrigin
 @RequestMapping("/package")
 public class PackageController {
+    PackageServiceImpl pser;
 
-    private final PackageService packageService;
-
-    public PackageController(PackageService packageService) {
-        this.packageService = packageService;
+    public PackageController(PackageServiceImpl pser) {
+        super();
+        this.pser = pser;
     }
-
-    @GetMapping("/pack/{pid}")
+    @GetMapping("/pack/{id}")
     public Package viewDetailedPackage(@PathVariable int pid) {
-        return packageService.viewDetailedPackage(pid);
+        return pser.viewDetailedPackage(pid);
     }
 
     @GetMapping("/{mid}/packages")
-    public List<Package> getPackagesByMuseum(@PathVariable int mid) {
-        return packageService.getPackagesByMuseumId(mid);
+    public List<Package> getPackagesByMuseumId(@PathVariable("mid") int mid) {
+        return pser.getPackagesByMuseumId(mid);
     }
 
     @PostMapping("/create")
     public int createPackage(@RequestBody Package p) {
-        return packageService.createPackage(p);
+        return pser.createPackage(p);
     }
 }

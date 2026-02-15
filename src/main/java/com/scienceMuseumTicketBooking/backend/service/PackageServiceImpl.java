@@ -9,17 +9,18 @@ import com.scienceMuseumTicketBooking.backend.repository.PackageRepository;
 import com.scienceMuseumTicketBooking.backend.service.PackageService;
 
 @Service
-public class PackageServiceImpl implements PackageService {
-
-    private final PackageRepository prepo;
+public class PackageServiceImpl implements PackageService{
+    PackageRepository prepo;
 
     public PackageServiceImpl(PackageRepository prepo) {
+        super();
         this.prepo = prepo;
     }
 
     @Override
     public Package viewDetailedPackage(int pid) {
-        return prepo.findById(pid).orElse(null);
+        return prepo.findById(pid).get();
+
     }
 
     @Override
@@ -29,7 +30,9 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public int createPackage(Package p) {
-        Package saved = prepo.save(p);
-        return saved.getPid();
+        Package PP= prepo.save(p);
+        return PP.getPid();
     }
+
+
 }
